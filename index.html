@@ -181,8 +181,8 @@
         </div>
 
         <div class="field">
-          <label class="lbl" for="lokasi">Lokasi</label>
-          <textarea id="lokasi" name="lokasi" placeholder="Alamat / lokasi pengambilan" required></textarea>
+          <label class="lbl" for="lokasi">Alamat Pengiriman</label>
+          <textarea id="lokasi" name="lokasi" placeholder="Alamat / lokasi pengiriman (jalan, no. rumah, patokan)" required></textarea>
         </div>
 
         <div class="field">
@@ -307,7 +307,7 @@
     };
     if (!data.nama) return showError('Nama wajib diisi.'), form.nama.focus();
     if (!/^\+?[0-9][0-9 \-]{7,17}$/.test(data.telp)) return showError('No. Telp tidak valid, contoh: 081234567890.'), form.telp.focus();
-    if (!data.lokasi) return showError('Lokasi wajib diisi.'), form.lokasi.focus();
+    if (!data.lokasi) return showError('Alamat pengiriman wajib diisi.'), form.lokasi.focus();
     if (data.jumlah < 1) return showError('Jumlah minimal 1 kg.'), jumlah.focus();
 
     btn.disabled = true; btn.classList.add('loading'); btn.querySelector('.txt').textContent = 'Mengirim...';
@@ -330,7 +330,7 @@
     document.getElementById('rcpt').innerHTML = `
       <div><span>Nama</span><b>${esc(d.nama)}</b></div>
       <div><span>No. Telp</span><b>${esc(d.telp)}</b></div>
-      <div><span>Lokasi</span><b>${esc(d.lokasi)}</b></div>
+      <div><span>Alamat</span><b>${esc(d.lokasi)}</b></div>
       <div><span>Mangga</span><b>${esc(d.mangga)}</b></div>
       <div><span>Jumlah</span><b>${d.jumlah} kg × ${rupiah(HARGA[d.mangga])}</b></div>
       <div><span>Total</span><b>${rupiah(d.jumlah * HARGA[d.mangga])}</b></div>
