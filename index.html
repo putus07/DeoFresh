@@ -95,6 +95,11 @@
   .items{display:grid;gap:10px}
   .item{border:1.5px solid var(--line);border-radius:14px;background:#FFFDF8;overflow:hidden;transition:border-color .2s,background .2s}
   .item.on{border-color:var(--leaf);background:var(--leaf-soft)}
+  .item.habis{opacity:.55;background:#F6F1E8;border-style:dashed}
+  .item.habis .item-head{cursor:not-allowed}
+  .item.habis .item-head em small{color:#A33A22;font-weight:600}
+  .item.habis .check{display:none}
+  .habis-tag{font-style:normal;font-size:.7rem;font-weight:700;color:#fff;background:#A33A22;padding:2px 7px;border-radius:999px;vertical-align:2px}
   .item-head{all:unset;box-sizing:border-box;width:100%;display:flex;align-items:center;gap:10px;padding:13px 14px;cursor:pointer;font-weight:600}
   .item-head:focus-visible{box-shadow:inset 0 0 0 3px rgba(63,125,58,.35)}
   .item-head i{font-style:normal;font-size:1.3rem;transition:transform .3s}
@@ -190,7 +195,7 @@
 
         <div class="price-strip">
           <span class="ico">🏷️</span>
-          <div><b>Harum Rp28.000/kg<br>Manalagi Rp25.000/kg</b><small>Pilih jenis mangga di bawah, total dihitung otomatis</small></div>
+          <div><b><span data-strip="Harum">Harum Rp28.000/kg</span><br><span data-strip="Manalagi">Manalagi Rp25.000/kg</span></b><small>Pilih jenis mangga di bawah, total dihitung otomatis</small></div>
         </div>
 
         <div class="field">
@@ -271,6 +276,7 @@
      ========================================================= */
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwfyf7O6TL9vIrhNGVwifnIPO8ScV5AdfwNbyUiqDTx9laM2NGBA9y1qnCrqecL81DD/exec';
   const TAMPILKAN_WA = false;   // true = tampilkan tombol konfirmasi WhatsApp, false = sembunyikan
+  const TERSEDIA = { Harum: true, Manalagi: false };   // stok: true = tersedia, false = habis (tidak bisa dipilih)
   const HARGA = { Harum: 28000, Manalagi: 25000 };   // harga per kg
   const FOTO_MANGGA = { Harum: 0, Manalagi: 5 };      // foto yang tampil saat jenis dipilih
 
@@ -337,6 +343,19 @@
     totalEl.textContent = rupiah(hitungTotal(pesanan()));
     totalEl.classList.remove('bump'); void totalEl.offsetWidth; totalEl.classList.add('bump');
   }
+  // tandai jenis yang stoknya habis
+  items.forEach(it => {
+    const j = it.dataset.jenis;
+    if (TERSEDIA[j] !== false) return;
+    it.classList.add('habis');
+    const head = it.querySelector('.item-head');
+    head.disabled = true;
+    head.title = j + ' sedang tidak tersedia';
+    head.querySelector('small').textContent = 'Stok habis — segera tersedia kembali';
+    const st = document.querySelector(`[data-strip="${j}"]`);
+    if (st) st.innerHTML = `<s>${st.textContent}</s> <em class="habis-tag">habis</em>`;
+  });
+
   items.forEach(it => {
     const inp = it.querySelector('.jml');
     const val = () => Math.max(0, parseInt(inp.value) || 0);
